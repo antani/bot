@@ -18,6 +18,9 @@ var lex = LEX.create({
 });
 
 lex.onRequest = app;
+app.use(function (req, res) {
+  res.send({ success: true });
+});
 
 let bot = new Bot({
   verify: 'myntra_bot',
