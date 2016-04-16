@@ -9,18 +9,22 @@ let bot = new Bot({
 })
 
 bot.on('message', (payload, reply) => {
-  let text = payload.message.text
+  let txt = payload.message.text
+  console.log("--"+ txt);
   request('http://developer.myntra.com/v2/search/data/men-casual-shirts?userQuery=false&rows=2', function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        search_response = JSON.parse(body);
-        products = search_response.data.results.products;
-        reply({ text: products[0].product }, (err) => {
+        var search_response = JSON.parse(body);
+        console.log("response:" + search_response);
+        var products = search_response.data.results.products;
+        console.log(products);
+        var first_product = products[0].product;
+        reply({ text: first_product }, (err) => {
           if (err) throw err
           console.log(`Sent ${profile.first_name} ${profile.last_name}: ${text}`)
         })    
       }
     });  
   })
-})
+
 
 http.createServer(bot.middleware()).listen(3000)
