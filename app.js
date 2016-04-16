@@ -21,6 +21,13 @@ lex.onRequest = app;
 app.use(function (req, res) {
   res.send({ success: true });
 });
+app.get('/webhook', function (req, res) {
+  if (req.query['hub.verify_token'] === 'myntra_bot') {
+    res.send(req.query['hub.challenge']);
+  } else {
+    res.send('Error, wrong validation token');    
+  }
+});
 
 let bot = new Bot({
   verify: 'myntra_bot',
