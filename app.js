@@ -23,6 +23,7 @@ app.get('/webhook', function (req, res) {
   }
 });
 app.post('/webhook/', function (req, res) {
+    console.log(req);
     var messaging_events = req.body.entry[0].messaging;
     for (var i = 0; i < messaging_events.length; i++) {
         var event = req.body.entry[0].messaging[i];
@@ -30,6 +31,7 @@ app.post('/webhook/', function (req, res) {
 
         if (event.message && event.message.text) {
             var text = event.message.text;
+            console.log(text);
             sendTextMessage(sender, "Echo: " + text.substring(0, 200));
         }
     }
