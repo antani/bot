@@ -1,6 +1,7 @@
 "use strict";
 const http = require('http');
 const Bot = require('messenger-bot');
+const request = require('request');
 
 let bot = new Bot({
   verify: 'myntra_bot',
@@ -12,12 +13,18 @@ bot.on('message', (payload, reply) => {
 
   bot.getProfile(payload.sender.id, (err, profile) => {
     if (err) throw err
-
-    reply({ text }, (err) => {
-      if (err) throw err
-
-      console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
-    })
+    search_response="";  
+    request('curl http://developer.myntra.com/v2/search/data/men-casual-shirts?userQuery=false&rows=2', function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        search_response = JSON.parse(body);
+        products = search_response.data.results.products;
+        reply({ products[0].product }, (err) => {
+          if (err) throw err
+          //console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
+        })    
+      }
+    });  
+    
   })
 })
 

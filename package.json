@@ -8,6 +8,7 @@
     "letsencrypt": "^1.4.3",
     "letsencrypt-express": "~1.1.3",
     "messenger-bot": "^1.4.0",
+    "node-wit": "^3.2.0",
     "request": "^2.71.0",
     "spdy": "^3.2.3"
   },
