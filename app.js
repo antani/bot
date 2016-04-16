@@ -10,21 +10,16 @@ let bot = new Bot({
 
 bot.on('message', (payload, reply) => {
   let text = payload.message.text
-
-  bot.getProfile(payload.sender.id, (err, profile) => {
-    if (err) throw err
-    search_response="";  
-    request('curl http://developer.myntra.com/v2/search/data/men-casual-shirts?userQuery=false&rows=2', function (error, response, body) {
+  request('http://developer.myntra.com/v2/search/data/men-casual-shirts?userQuery=false&rows=2', function (error, response, body) {
       if (!error && response.statusCode == 200) {
         search_response = JSON.parse(body);
         products = search_response.data.results.products;
-        reply({ products[0].product }, (err) => {
+        reply({ text: products[0].product }, (err) => {
           if (err) throw err
-          //console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
+          console.log(`Sent ${profile.first_name} ${profile.last_name}: ${text}`)
         })    
       }
     });  
-    
   })
 })
 
