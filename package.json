@@ -4,7 +4,10 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "letsencrypt": "^1.4.3",
+    "letsencrypt-express": "~1.1.3",
+    "spdy": "^3.2.3"
   },
   "devDependencies": {},
   "scripts": {

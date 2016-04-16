@@ -6,7 +6,7 @@ var fs = require('fs'),
     https.createServer({
       key: fs.readFileSync('newkey.pem'),
       cert: fs.readFileSync('cert.pem')
-    }, app).listen(55555);
+    }, app).listen(443);
 
     app.get('/', function (req, res) {
       res.header('Content-type', 'text/html');
