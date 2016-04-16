@@ -18,10 +18,28 @@ bot.on('message', (payload, reply) => {
         var products = search_response.data.results.products;
         console.log(products);
         var first_product = products[0].product;
-        reply({ text: first_product }, (err) => {
-          if (err) throw err
-          console.log(`Sent ${profile.first_name} ${profile.last_name}: ${text}`)
-        })    
+        var first_product_img = products[0].search_image;
+        var first_product_price = products[0].discounted_price;
+        let element = {
+          title: first_product,
+          price: first_product_price,
+          image_url:  first_product_img|| null,
+          buttons: []
+        };
+        reply({
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'generic',
+              elements: [element]
+            }
+          }
+        });
+
+        // reply({ text: first_product }, (err) => {
+        //   if (err) throw err
+        //   console.log(`Sent ${profile.first_name} ${profile.last_name}: ${text}`)
+        // })    
       }
     });  
   })
