@@ -1,65 +1,23 @@
-//
-var fs = require('fs'),
-    https = require('https'),
-    express = require('express'),
-    request = require('request'),
-    app = express();
+const http = require('http');
+const Bot = require('messenger-bot');
 
-// You MUST change these values, consult the Messenger Platform Getting Started guide
-var verify_token = 'myntra_bot';
-var token = "CAALiIkjYEW0BAKBiHTSjriO14VJvcNGBGaBNvHWXyKvfHHNEZAu5ZAZCaLSZCsYPtGZBZB3vSzgVKwZBk1x6kabZBgNhyUZCYa2T4evCJYuqAO82sMEBruTziNYp1jfbDiHZBgS0wQ7TLHeaw7uwZBpCmG1su4OZCJyzSvV4ZC592zP3dqao4MIKssBRRZBbIy59ZBLfnEZD";
-app.get('/', function (req, res) {
-  res.header('Content-type', 'text/html');
-  return res.end('<h1>Hello, Secure World!</h1>');
-});
-app.listen(3000,function() {
-  console.log('Started at 3000');
-});
-app.get('/webhook', function (req, res) {
-  if (req.query['hub.verify_token'] === 'myntra_bot') {
-    res.send(req.query['hub.challenge']);
-  } else {
-    res.send('Error, wrong validation token');    
-  }
-});
-app.post('/webhook/', function (req, res) {
-    console.log(req);
-    var messaging_events = req.body.entry[0].messaging;
-    for (var i = 0; i < messaging_events.length; i++) {
-        var event = req.body.entry[0].messaging[i];
-        var sender = event.sender.id;
+let bot = new Bot({
+  token: 'myntra_bot',
+  verify: 'CAALiIkjYEW0BAKBiHTSjriO14VJvcNGBGaBNvHWXyKvfHHNEZAu5ZAZCaLSZCsYPtGZBZB3vSzgVKwZBk1x6kabZBgNhyUZCYa2T4evCJYuqAO82sMEBruTziNYp1jfbDiHZBgS0wQ7TLHeaw7uwZBpCmG1su4OZCJyzSvV4ZC592zP3dqao4MIKssBRRZBbIy59ZBLfnEZD'
+})
 
-        if (event.message && event.message.text) {
-            var text = event.message.text;
-            console.log(text);
-            sendTextMessage(sender, "Echo: " + text.substring(0, 200));
-        }
-    }
-    res.sendStatus(200);
-});
+bot.on('message', (payload, reply) => {
+  let text = payload.message.text
 
-function sendTextMessage(sender, text) {
+  bot.getProfile(payload.sender.id, (err, profile) => {
+    if (err) throw err
 
-    var messageData = {
-        text: text
-    };
+    reply({ text }, (err) => {
+      if (err) throw err
 
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: token},
-        method: 'POST',
-        json: {
-            recipient: {id: sender},
-            message: messageData
-        }
-    }, function (error, response) {
+      console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
+    })
+  })
+})
 
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-
-    });
-
-}
+http.createServer(bot.middleware()).listen(3000)
