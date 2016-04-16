@@ -18,9 +18,7 @@ var lex = LEX.create({
 });
 
 lex.onRequest = app;
-app.use(function (req, res) {
-  res.send({ success: true });
-});
+
 app.get('/webhook', function (req, res) {
   if (req.query['hub.verify_token'] === 'myntra_bot') {
     res.send(req.query['hub.challenge']);
