@@ -22,9 +22,13 @@ bot.on('message', (payload, reply) => {
         var first_product_price = products[0].discounted_price;
         let element = {
           title: first_product,
-          price: first_product_price,
+          subtitle: first_product_price,
           image_url:  first_product_img|| null,
-          buttons: []
+          buttons: {
+            type: 'web_url',
+            title: 'Buy Now',
+            url: `http://myntra.com`
+          }
         };
         reply({
           attachment: {
@@ -34,7 +38,7 @@ bot.on('message', (payload, reply) => {
               elements: [element]
             }
           }
-        });
+        }); 
 
         // reply({ text: first_product }, (err) => {
         //   if (err) throw err
